@@ -1,0 +1,59 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #AsociacionForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="General">
+        <br>
+        <app-general-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-general-tab>
+      </tab>
+      <tab heading="Detalle">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div [class.has-error]="formGroup.controls['es_derivada'].invalid && submitted">
+              <div class="checkbox">
+                <label>
+                  <input id="objeto-es_derivada" formControlName="es_derivada" type="checkbox">
+                  &nbsp;Esta asociación es derivada
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Descripción">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['descripcion'].invalid && submitted">
+              <label class="control-label" for="objeto-descripcion">Esta asociacion representa el hecho de...</label>
+              <textarea id="objeto-descripcion" formControlName="descripcion" class="form-control" rows="10" placeholder="Descripción"></textarea>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Rastreabilidad">
+        <br>
+        <app-tracking-tab [objeto]="objeto" [formGroup]="formGroup"></app-tracking-tab>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+      <tab heading="Sección">
+        <br>
+        <app-organization-tab [objeto]="objeto" [documentoId]="documentoId" [formGroup]="formGroup"></app-organization-tab>
+      </tab>
+      <tab heading="Historia" *ngIf="objeto?.id">
+        <br>
+        <app-log-tab [objeto]="objeto"></app-log-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>

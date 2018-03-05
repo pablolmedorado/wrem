@@ -1,0 +1,66 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #ExcepcionOSForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="General">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['nombre'].invalid && submitted">
+              <label class="control-label requerido" for="objeto-nombre">Nombre</label>
+              <input id="objeto-nombre" formControlName="nombre" type="text" class="form-control">
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Condición">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['condicion_lenguaje_natural'].invalid && submitted">
+              <label class="control-label" for="objeto-condicion_lenguaje_natural">Lenguaje natural</label>
+              <textarea id="objeto-condicion_lenguaje_natural" formControlName="condicion_lenguaje_natural" class="form-control" rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['condicion_ocl'].invalid && submitted">
+              <label class="control-label" for="objeto-condicion_ocl">Object Constraint Language (OCL)</label>
+              <textarea id="objeto-condicion_ocl" formControlName="condicion_ocl" class="form-control" rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Expresión">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['expresion_lenguaje_natural'].invalid && submitted">
+              <label class="control-label" for="objeto-expresion_lenguaje_natural">Lenguaje natural</label>
+              <textarea id="objeto-expresion_lenguaje_natural" formControlName="expresion_lenguaje_natural" class="form-control" rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['expresion_ocl'].invalid && submitted">
+              <label class="control-label" for="objeto-expresion_ocl">Object Constraint Language (OCL)</label>
+              <textarea id="objeto-expresion_ocl" formControlName="expresion_ocl" class="form-control" rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>

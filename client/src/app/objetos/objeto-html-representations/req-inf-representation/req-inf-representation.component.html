@@ -1,0 +1,104 @@
+<ng-container *ngIf="requisito_informacion">
+  <table border="1" width="100%">
+    <tr bgcolor="#c8e0e0">
+      <th align="left" valign="top">{{ requisito_informacion.codigo }}</th>
+      <th align="left" valign="top" width="100%" colspan="2">{{ requisito_informacion.nombre }}</th>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Versión</th>
+      <td align="left" valign="top" colspan="2">{{ requisito_informacion.version }} ({{ requisito_informacion.fecha_version | date: 'dd/MM/yyyy' }})</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Autores</th>
+      <td align="left" valign="top" colspan="2">
+        <ul *ngIf="requisito_informacion.autores?.length; else blockInterrogacion">
+          <li *ngFor="let autor of requisito_informacion.autores">{{ objetos.get(autor).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Fuentes</th>
+      <td align="left" valign="top" colspan="2">
+        <ul *ngIf="requisito_informacion.fuentes?.length; else blockInterrogacion">
+          <li *ngFor="let fuente of requisito_informacion.fuentes">{{ objetos.get(fuente).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Dependencias</th>
+      <td align="left" valign="top" colspan="2">
+        <ul *ngIf="requisito_informacion.trazabilidad_desde?.length; else blockNinguno">
+          <li *ngFor="let dependencia of requisito_informacion.trazabilidad_desde">[{{objetos.get(dependencia).codigo}}] {{ objetos.get(dependencia).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Descripción</th>
+      <td colspan="2">
+        El sistema deberá almacenar la información correspondiente a <em *ngIf="requisito_informacion.descripcion; else blockPD">{{ requisito_informacion.descripcion }}</em>.
+        <span *ngIf="requisito_informacion.datos_especificos?.length">&nbsp;En concreto:</span>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Datos específicos</th>
+      <td colspan="2" align="left" valign="top">
+        <ul *ngIf="requisito_informacion.datos_especificos?.length; else blockNinguno">
+          <li *ngFor="let dato of requisito_informacion.datos_especificos">
+            <span>{{ dato.descripcion }} <span *ngIf="dato.comentarios">({{ dato.comentarios }})</span></span>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th rowspan="2" align="left" valign="top">Tiempo de vida</th>
+      <th align="left" valign="top">Medio</th>
+      <th align="left" valign="top">Máximo</th>
+    </tr>
+    <tr>
+      <td><span *ngIf="requisito_informacion.tiempo_vida_med; else blockPD">{{ requisito_informacion.tiempo_vida_med }} {{ tipos_unidades_tiempo[requisito_informacion.tiempo_vida_ud] }}</span></td>
+      <td><span *ngIf="requisito_informacion.tiempo_vida_max; else blockPD">{{ requisito_informacion.tiempo_vida_max }} {{ tipos_unidades_tiempo[requisito_informacion.tiempo_vida_ud] }}</span></td>
+    </tr>
+    <tr>
+      <th rowspan="2" align="left" valign="top">Ocurrencias simultáneas</th>
+      <th align="left" valign="top">Medio</th>
+      <th align="left" valign="top">Máximo</th>
+    </tr>
+    <tr>
+      <td><span *ngIf="requisito_informacion.ocurrencias_simultaneas_med; else blockPD">{{ requisito_informacion.ocurrencias_simultaneas_med }}</span></td>
+      <td><span *ngIf="requisito_informacion.ocurrencias_simultaneas_max; else blockPD">{{ requisito_informacion.ocurrencias_simultaneas_max }}</span></td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Importancia</th>
+      <td align="left" valign="top" colspan="2">
+        <span *ngIf="requisito_informacion.importancia !== 'PD'; else blockPD">{{ tipos_importancia[requisito_informacion.importancia] }}</span>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Urgencia</th>
+      <td align="left" valign="top" colspan="2">
+        <span *ngIf="requisito_informacion.urgencia !== 'PD'; else blockPD">{{ tipos_urgencia[requisito_informacion.urgencia] }}</span>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Estado</th>
+      <td align="left" valign="top" colspan="2">
+        <span *ngIf="requisito_informacion.estado_desarrollo !== 'PD'; else blockPD">{{ tipos_estado_desarrollo[requisito_informacion.estado_desarrollo] }}</span>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Estabilidad</th>
+      <td align="left" valign="top" colspan="2">
+        <span *ngIf="requisito_informacion.estabilidad !== 'PD'; else blockPD">{{ tipos_estabilidad[requisito_informacion.estabilidad] }}</span>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Comentarios</th>
+      <td align="left" valign="top" colspan="2">
+        {{ requisito_informacion.comentarios || 'Ninguno' }}
+      </td>
+    </tr>
+  </table>
+</ng-container>
+<ng-template #blockPD><span style="color:red;"><b>PD</b></span></ng-template>
+<ng-template #blockInterrogacion><span style="color:red;"><b>?</b></span></ng-template>
+<ng-template #blockNinguno><span>Ninguno</span></ng-template>

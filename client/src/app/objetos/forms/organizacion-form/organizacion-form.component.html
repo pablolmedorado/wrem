@@ -1,0 +1,66 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #OrganizacionForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="General">
+        <br>
+        <app-general-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-general-tab>
+      </tab>
+      <tab heading="Detalle">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['direccion'].invalid && submitted">
+              <label class="control-label" for="objeto-direccion">Direccion</label>
+              <input id="objeto-direccion" formControlName="direccion" type="text" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="form-group" [class.has-error]="formGroup.controls['telefono'].invalid && submitted">
+                  <label class="control-label" for="objeto-telefono">Teléfono</label>
+                  <input id="objeto-telefono" formControlName="telefono" type="text" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="form-group" [class.has-error]="formGroup.controls['email'].invalid && submitted">
+                  <label class="control-label" for="objeto-email">Email</label>
+                  <input id="objeto-email" formControlName="email" type="email" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <label class="control-label" for="objeto-participantes">Participantes asociados</label>
+            <select id="objeto-participantes" class="form-control" size="5" multiple readonly>
+              <option *ngFor="let participante of participantes_asociados" value="{{participante.id}}">{{participante.nombre}}</option>
+            </select>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+      <tab heading="Sección">
+        <br>
+        <app-organization-tab [objeto]="objeto" [documentoId]="documentoId" [formGroup]="formGroup"></app-organization-tab>
+      </tab>
+      <tab heading="Historia" *ngIf="objeto?.id">
+        <br>
+        <app-log-tab [objeto]="objeto"></app-log-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>

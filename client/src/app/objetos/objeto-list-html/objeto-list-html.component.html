@@ -1,0 +1,79 @@
+<ng-container *ngIf="objetos_array?.length">
+  <br>
+  <h2 align="left">Índice</h2>
+  <br>
+  <div *ngFor="let elemento_indice of secciones_indice" style="font-size: 16px;">
+    <div class="row">
+      <div class="col-xs-12">
+        <span [innerHTML]="elemento_indice"></span>
+      </div>
+    </div>
+  </div>
+  <br>
+  <hr>
+  <br>
+  <div *ngFor="let objeto of objetos_array">
+    <div class="row">
+      <div class="col-xs-12" ngSwitch="{{ objeto.tipo_objeto }}">
+        <ng-container *ngSwitchCase="'parraforem'">
+          <app-parrafo-representation [parrafo]="objeto"></app-parrafo-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'organizacionrem'">
+          <app-organizacion-representation [organizacion]="objeto"></app-organizacion-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'participanterem'">
+          <app-participante-representation [participante]="objeto"></app-participante-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'reunionrem'">
+          <app-reunion-representation [reunion]="objeto"></app-reunion-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'actorrem'">
+          <app-actor-representation [actor]="objeto"></app-actor-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'requisitoinformacionrem'">
+          <app-req-inf-representation [requisito_informacion]="objeto"></app-req-inf-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'requisitorem'">
+          <app-requisito-representation [requisito]="objeto"></app-requisito-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'casodeusorem'">
+          <app-caso-uso-representation [caso]="objeto"></app-caso-uso-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'tipoobjetorem'">
+          <app-tipo-objeto-representation [tipo_objeto]="objeto"></app-tipo-objeto-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'tipovalorrem'">
+          <app-tipo-valor-representation [tipo_valor]="objeto"></app-tipo-valor-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'asociacionrem'">
+          <app-asociacion-representation [asociacion]="objeto"></app-asociacion-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'operacionsistemarem'">
+          <app-operacion-sistema-representation [operacion_sistema]="objeto"></app-operacion-sistema-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'conflictorem'">
+          <app-conflicto-representation [conflicto]="objeto"></app-conflicto-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'defectorem'">
+          <app-defecto-representation [defecto]="objeto"></app-defecto-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'peticioncambiorem'">
+          <app-peticion-cambio-representation [peticion_cambio]="objeto"></app-peticion-cambio-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'objetivorem'">
+          <app-objetivo-representation [objetivo]="objeto"></app-objetivo-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'seccionrem'">
+          <app-seccion-representation [seccion]="objeto"></app-seccion-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'matriztrazabilidadrem'">
+          <app-matriz-trazabilidad-representation [matriz]="objeto"></app-matriz-trazabilidad-representation>
+        </ng-container>
+        <ng-container *ngSwitchCase="'imagenrem'">
+          <app-imagen-representation [imagen]="objeto"></app-imagen-representation>
+        </ng-container>
+      </div>
+    </div>
+    <br>
+  </div>
+</ng-container>

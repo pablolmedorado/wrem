@@ -1,0 +1,64 @@
+<div [formGroup]="formGroup">
+  <div class="row">
+    <div class="col-xs-3">
+      <div class="form-group" [class.has-error]="formGroup.controls['codigo'].invalid && submitted">
+        <label class="control-label" for="objeto-codigo">Código</label>
+        <input id="objeto-codigo" formControlName="codigo" type="text" class="form-control">
+      </div>
+    </div>
+    <div class="col-xs-9">
+      <div class="form-group" [class.has-error]="formGroup.controls['nombre'].invalid && submitted">
+        <label class="control-label requerido" for="objeto-nombre">Nombre</label>
+        <input id="objeto-nombre" formControlName="nombre" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group" [class.has-error]="formGroup.controls['version'].invalid && submitted">
+        <label class="control-label requerido" for="objeto-version">Version</label>
+        <input id="objeto-version" formControlName="version" type="text" class="form-control">
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group" [class.has-error]="formGroup.controls['fecha_version'].invalid && submitted">
+        <label class="control-label requerido" for="objeto-fecha-version">Fecha</label>
+        <div id="objeto-fecha-version" class="input-group">
+          <input class="form-control" style="float:none" placeholder="Fecha" ngx-mydatepicker name="fecha_version"
+                formControlName="fecha_version" [options]="versionDateOptions" #dp="ngx-mydatepicker"/>
+
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-default" (click)="dp.clearDate()">
+                  <i class="glyphicon glyphicon-remove"></i>
+              </button>
+              <button type="button" class="btn btn-default" (click)="dp.toggleCalendar()">
+                  <i class="glyphicon glyphicon-calendar"></i>
+              </button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group" [class.has-error]="formGroup.controls['autores'].invalid && submitted">
+        <label class="control-label" for="objeto-autores">Autores</label>
+        <ss-multiselect-dropdown formControlName="autores"
+          [options]="participantesOptions"
+          [settings]="multiselectSettings"
+          [texts]="multiselectParticipantesTexts">
+        </ss-multiselect-dropdown>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group" [class.has-error]="formGroup.controls['fuentes'].invalid && submitted">
+        <label class="control-label" for="objeto-fuentes">Fuentes</label>
+        <ss-multiselect-dropdown formControlName="fuentes"
+          [options]="participantesOptions"
+          [settings]="multiselectSettings"
+          [texts]="multiselectParticipantesTexts">
+        </ss-multiselect-dropdown>
+      </div>
+    </div>
+  </div>
+</div>

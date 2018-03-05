@@ -1,0 +1,10 @@
+<div [formGroup]="formGroup">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group" [class.has-error]="formGroup.controls['comentarios'].invalid && submitted">
+        <label class="control-label" for="objeto-comentarios">Comentarios</label>
+        <textarea id="objeto-comentarios" formControlName="comentarios" class="form-control" rows="10"></textarea>
+      </div>
+    </div>
+  </div>
+</div>

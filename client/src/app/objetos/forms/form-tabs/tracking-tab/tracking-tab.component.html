@@ -1,0 +1,12 @@
+<div [formGroup]="formGroup">
+  <div class="row">
+    <div class="col-xs-6">
+      <label for="objeto-trazabilidad">Trazas desde este objeto</label>
+      <ss-multiselect-dropdown formControlName="trazabilidad_desde"
+        [options]="trazablesOptions"
+        [settings]="multiselectSettings"
+        [texts]="multiselectTrazablesTexts">
+      </ss-multiselect-dropdown>
+    </div>
+  </div>
+</div>

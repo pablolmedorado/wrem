@@ -1,0 +1,125 @@
+<ng-container *ngIf="tipo_valor">
+  <table border="1" width="100%">
+    <tr bgcolor="#c8e0e0">
+      <th align="left" valign="top">{{ tipo_valor.codigo }}</th>
+      <th align="left" valign="top" width="100%" colspan="1">{{ tipo_valor.nombre }}</th>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Versión</th>
+      <td align="left" valign="top" colspan="1">{{ tipo_valor.version }} ({{ tipo_valor.fecha_version | date: 'dd/MM/yyyy' }})</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Autores</th>
+      <td align="left" valign="top" colspan="1">
+        <ul *ngIf="tipo_valor.autores?.length; else blockInterrogacion">
+          <li *ngFor="let autor of tipo_valor.autores">{{ objetos.get(autor).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Dependencias</th>
+      <td align="left" valign="top" colspan="1">
+        <ul *ngIf="tipo_valor.trazabilidad_desde?.length; else blockNinguno">
+          <li *ngFor="let dependencia of tipo_valor.trazabilidad_desde">[{{objetos.get(dependencia).codigo}}] {{ objetos.get(dependencia).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Descripción</th>
+      <td colspan="1" align="left" valign="top">
+          Este tipo valor representa
+          <ng-container *ngIf="tipo_valor.descripcion; else blockPD">{{ tipo_valor.descripcion }}</ng-container> 
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Definicion</th>
+      <td colspan="1" align="left" valign="top">
+          <ng-container *ngIf="tipo_valor.definicion; else blockPD">{{ tipo_valor.definicion }}</ng-container> 
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Comentarios</th>
+      <td align="left" valign="top" colspan="1">
+        {{ tipo_valor.comentarios || 'Ninguno' }}
+      </td>
+    </tr>
+  </table>
+  <ng-container *ngFor="let atributo of tipo_valor.atributos">
+    <br>
+    <table border="1" width="100%">
+      <tr bgcolor="#c8e0e0">
+        <th align="left" valign="top" nowrap="1">
+          Atributo {{ tipos_propiedad[atributo.tipo_propiedad] }}
+        </th>
+        <th align="left" valign="top" width="100%">
+          {{ tipo_valor.nombre }}:: {{ atributo.nombre }}
+        </th>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Descripción</th>
+        <td align="left" valign="top">
+          Este atributo representa <em *ngIf="atributo.descripcion; else blockPD">{{ atributo.descripcion }}</em>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Tipo</th>
+        <td align="left" valign="top">
+          <code ngSwitch="{{ atributo.tipo }}">
+            <ng-container *ngSwitchCase="'S'">
+              <ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'C'">
+              Set (<ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>)
+            </ng-container>
+            <ng-container *ngSwitchCase="'SE'">
+              Sequence (<ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>)
+            </ng-container>
+            <ng-container *ngSwitchCase="'B'">
+              Bag (<ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>)
+            </ng-container>
+          </code>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Comentarios</th>
+        <td align="left" valign="top" colspan="1">
+          <ng-container *ngIf="atributo.comentarios; else blockNinguno">{{ atributo.comentarios }}</ng-container>
+        </td>
+      </tr>
+    </table>
+  </ng-container>
+  <ng-container *ngFor="let expresion of tipo_valor.expresiones">
+    <br>
+    <table border="1" width="100%">
+      <tr bgcolor="#c8e0e0">
+        <th align="left" valign="top" nowrap="1">Expresión de invariante</th>
+        <th align="left" valign="top" width="100%">{{ tipo_valor.nombre }}:: {{ expresion.nombre }}</th>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Descripción</th>
+        <td align="left" valign="top" colspan="1">
+          <ng-container *ngIf="expresion.expresion_lenguaje_natural; else blockPD">{{ expresion.expresion_lenguaje_natural }}</ng-container>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Expresión OCL</th>
+        <td align="left" valign="top">
+          <code *ngIf="expresion.expresion_ocl">{{ expresion.expresion_ocl }}</code>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Comentarios</th>
+        <td align="left" valign="top" colspan="1">
+          <ng-container *ngIf="expresion.comentarios; else blockNinguno">{{ expresion.comentarios }}</ng-container>
+        </td>
+      </tr>
+    </table>
+  </ng-container>
+</ng-container>
+<ng-template #blockPD><span style="color:red;"><b>PD</b></span></ng-template>
+<ng-template #blockInterrogacion><span style="color:red;"><b>?</b></span></ng-template>
+<ng-template #blockNinguno>Ninguno</ng-template>

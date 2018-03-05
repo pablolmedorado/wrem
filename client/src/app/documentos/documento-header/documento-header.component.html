@@ -1,0 +1,16 @@
+<ng-container *ngIf="documento">
+  <div style="text-align: center;">
+    <h3>{{ documento.proyecto?.nombre }}</h3>
+    <br>
+    <h1 class="cover">{{ documento.nombre }}</h1>
+    <br>
+    <h3>{{ documento.version }}</h3>
+    <h3>{{ documento.creado | date: 'dd/MM/yyyy' }}</h3>
+    <br>
+    <h3>Preparado para:</h3>
+    <p><ng-container *ngIf="organizacionParaDocumento; else blockInterrogacion">{{ organizacionParaDocumento?.nombre }}</ng-container></p>
+    <h3>Preparado por:</h3>
+    <p><ng-container *ngIf="organizacionPorDocumento; else blockInterrogacion">{{ organizacionPorDocumento?.nombre }}</ng-container></p>
+  </div>
+</ng-container>
+<ng-template #blockInterrogacion><span style="color:red;"><b>?</b></span></ng-template>

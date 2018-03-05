@@ -1,0 +1,117 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #AtributoForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="General">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['nombre'].invalid && submitted">
+              <label class="control-label requerido" for="objeto-nombre">Nombre</label>
+              <input id="objeto-nombre" formControlName="nombre" type="text" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4">
+            <div class="form-group">
+              <label class="control-label requerido" for="objeto-categoria_tipo_base">Categoria de tipo base</label>
+              <select id="objeto-categoria_tipo_base" formControlName="categoria_tipo_base" class="form-control" (change)="changeTipoBase($event)">
+                <option value="primitivo">Primitivo</option>
+                <option value="objeto">Objeto</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xs-8">
+            <div ngSwitch="{{ formGroup.controls['categoria_tipo_base'].value }}">
+              <ng-container *ngSwitchCase="'primitivo'">
+                <div class="form-group" [class.has-error]="formGroup.controls['tipo_base_default'].invalid && submitted">
+                  <label class="control-label requerido" for="objeto-tipo_base_default">Tipo base</label>
+                  <select id="objeto-tipo_base_default" formControlName="tipo_base_default" class="form-control">
+                    <option [value]="null">Ninguno</option>
+                    <option *ngFor="let tipo of tiposBaseDefaultOptions" [value]="tipo.id">{{ tipo.codigo }} - {{ tipo.nombre }}</option>
+                  </select>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'objeto'">
+                <div class="form-group" [class.has-error]="formGroup.controls['tipo_base'].invalid && submitted">
+                  <label class="control-label requerido" for="objeto-tipo_base">Tipo base</label>
+                  <select id="objeto-tipo_base" formControlName="tipo_base" class="form-control">
+                    <option [ngValue]="null">Ninguno</option>
+                    <option *ngFor="let tipo of tiposOptions" [value]="tipo.id">{{ tipo.codigo }} - {{ tipo.nombre }}</option>
+                  </select>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['tipo'].invalid && submitted">
+              <label class="control-label requerido" for="objeto-tipo">Tipo</label>
+              <select id="objeto-tipo" formControlName="tipo" class="form-control" (change)="enableDisableMultiplicidad($event)">
+                <option *ngFor="let tipo of tiposComponente" [value]="tipo.value">{{ tipo.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['multiplicidad_inferior'].invalid && submitted">
+              <label class="control-label" for="objeto-multiplicidad_inferior">Multiplicidad inferior</label>
+              <input id="objeto-multiplicidad_inferior" formControlName="multiplicidad_inferior" type="text" class="form-control">
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['multiplicidad_superior'].invalid && submitted">
+              <label class="control-label" for="objeto-multiplicidad_superior">Multiplicidad superior</label>
+              <input id="objeto-multiplicidad_superior" formControlName="multiplicidad_superior" type="text" class="form-control">
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Detalle">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['tipo_propiedad'].invalid && submitted">
+              <label class="control-label requerido" for="objeto-tipo_propiedad">Tipo de propiedad</label>
+              <select id="objeto-tipo_propiedad" formControlName="tipo_propiedad" class="form-control" (change)="enableDisableValor($event)">
+                <option *ngFor="let tipo of tiposPropiedad" [value]="tipo.value">{{ tipo.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['valor'].invalid && submitted">
+              <label class="control-label" for="objeto-valor">Valor inicial/Expresión de derivación</label>
+              <textarea id="objeto-valor" formControlName="valor" class="form-control" rows="6"></textarea>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Descripción">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['descripcion'].invalid && submitted">
+              <label class="control-label" for="objeto-descripcion">Este componente representa...</label>
+              <textarea id="objeto-descripcion" formControlName="descripcion" class="form-control" rows="10" placeholder="Descripción"></textarea>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>

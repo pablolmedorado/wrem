@@ -1,0 +1,43 @@
+<ng-container *ngIf="actor">
+  <table border="1" width="100%">
+    <tr bgcolor="#c8e0e0">
+      <th align="left" valign="top">{{ actor.codigo }}</th>
+      <th align="left" valign="top" width="100%">{{ actor.nombre }}</th>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Versión</th>
+      <td align="left" valign="top" colspan="1">{{ actor.version }} ({{ actor.fecha_version | date: 'dd/MM/yyyy' }})</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Autores</th>
+      <td align="left" valign="top" colspan="1">
+        <ul *ngIf="actor.autores?.length; else blockInterrogacion">
+          <li *ngFor="let autor of actor.autores">{{ objetos.get(autor).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Fuentes</th>
+      <td align="left" valign="top" colspan="1">
+        <ul *ngIf="actor.fuentes?.length; else blockInterrogacion">
+          <li *ngFor="let fuente of actor.fuentes">{{ objetos.get(fuente).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Descripción</th>
+      <td align="left" valign="top">
+        Este actor representa <em *ngIf="actor.descripcion; else blockPD">{{ actor.descripcion }}</em>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Comentarios</th>
+      <td align="left" valign="top" colspan="1">
+        <ng-container *ngIf="actor.comentarios; else blockNinguno">{{ actor.comentarios }}</ng-container>
+      </td>
+    </tr>
+  </table>
+</ng-container>
+<ng-template #blockPD><span style="color:red;"><b>PD</b></span></ng-template>
+<ng-template #blockInterrogacion><span style="color:red;"><b>?</b></span></ng-template>
+<ng-template #blockNinguno>Ninguno</ng-template>

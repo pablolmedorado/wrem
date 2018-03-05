@@ -1,0 +1,120 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #PasoCUForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="Condición">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div [class.has-error]="formGroup.controls['es_condicional'].invalid && submitted">
+              <div class="checkbox">
+                <label>
+                  <input id="objeto-es_condicional" formControlName="es_condicional" type="checkbox" (change)="enableDisableCondicion()">
+                  &nbsp;Este paso es condicional
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['condicion'].invalid && submitted">
+              <label class="control-label" for="objeto-condicion">Condición</label>
+              <textarea id="objeto-condicion" formControlName="condicion" class="form-control" rows="6"></textarea>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Acción">
+        <br>
+        <div class="row">
+          <div class="col-xs-6">
+            <label class="control-label requerido" for="objeto-tipo_accion">Tipos de acción</label>
+            <div [class.has-error]="formGroup.controls['tipo_accion'].invalid && submitted">
+              <div class="radio">
+                <label>
+                  <input type="radio" formControlName="tipo_accion" id="tipo_accion1" value="S" (change)="enableDisableTiposAccion()">
+                  Acción del sistema
+                </label>
+              </div>
+            </div>
+            <div [class.has-error]="formGroup.controls['tipo_accion'].invalid && submitted">
+              <div class="radio">
+                <label>
+                  <input type="radio" formControlName="tipo_accion" id="tipo_accion2" value="M" (change)="enableDisableTiposAccion()">
+                  Acción de un actor
+                </label>
+              </div>
+            </div>
+            <div [class.has-error]="formGroup.controls['tipo_accion'].invalid && submitted">
+              <div class="radio">
+                <label>
+                  <input type="radio" formControlName="tipo_accion" id="tipo_accion2" value="IE" (change)="enableDisableTiposAccion()">
+                  Inclusión/Extensión
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="form-group" [class.has-error]="formGroup.controls['actor'].invalid && submitted">
+                    <label class="control-label" for="objeto-actor">Actor</label>
+                    <select id="objeto-actor" formControlName="actor" class="form-control">
+                      <option [value]="null">Ninguno</option>
+                      <option *ngFor="let actor of actoresOptions" [value]="actor.id">{{ actor.codigo }} - {{ actor.nombre }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="form-group" [class.has-error]="formGroup.controls['inclusion_extension'].invalid && submitted">
+                    <label class="control-label" for="objeto-inclusion_extension">Caso de uso</label>
+                    <select id="objeto-inclusion_extension" formControlName="inclusion_extension" class="form-control">
+                      <option [value]="null">Ninguno</option>
+                      <option *ngFor="let caso of casosUsoOptions" [value]="caso.id">{{ caso.codigo }} - {{ caso.nombre }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['acciones_realizadas'].invalid && submitted">
+              <label class="control-label" for="objeto-acciones_realizadas">Acción(es) realizada(s) por el sistema/un actor</label>
+              <textarea id="objeto-acciones_realizadas" formControlName="acciones_realizadas" class="form-control" rows="5" placeholder="Acciones"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['rendimiento'].invalid && submitted">
+              <label class="control-label" for="objeto-rendimiento">Valor rendimiento</label>
+              <input id="objeto-rendimiento" formControlName="rendimiento" type="number" min="0" class="form-control">
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['rendimiento_ud'].invalid && submitted">
+              <label class="control-label" for="objeto-rendimiento_ud">Unidad rendimiento</label>
+              <select id="objeto-rendimiento_ud" formControlName="rendimiento_ud" class="form-control">
+                <option *ngFor="let unidad of tipos_unidades_tiempo" [value]="unidad.value">{{ unidad.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,11 @@
+{% autoescape off %}
+Gracias por registrarse en {{ site_name }}.
+
+Para finalizar el registro debe confirmar su email en el siguiente enlace:
+{% block confirmation_link %}
+{{ protocol }}://{{ domain }}{% url 'usuarios:validar_email' uidb64=uidb64 token=token %}
+{% endblock %}
+
+Reciba un cordial saludo de parte del equipo de {{ site_name }}.
+
+{% endautoescape %}

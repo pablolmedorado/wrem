@@ -1,0 +1,24 @@
+<ng-container *ngIf="proyecto">
+  <form (ngSubmit)="onSubmit(formGroup)" #ProyectoForm="ngForm" [formGroup]="formGroup" novalidate>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group" [class.has-error]="formGroup.controls['nombre'].invalid && submitted">
+          <label class="control-label requerido" for="nombre">Nombre</label>
+          <input id="nombre" formControlName="nombre" type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group" [class.has-error]="formGroup.controls['grupos'].invalid && submitted">
+          <label class="control-label" for="grupos">Compartir en grupos</label>
+          <ss-multiselect-dropdown formControlName="grupos"
+            [options]="gruposOptions"
+            [settings]="multiselectSettings"
+            [texts]="multiselectGruposTexts">
+          </ss-multiselect-dropdown>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-container>

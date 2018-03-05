@@ -1,0 +1,42 @@
+<ng-container *ngIf="documento">
+  <form (ngSubmit)="onSubmit(formGroup)" #DocumentoForm="ngForm" [formGroup]="formGroup" novalidate>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group" [class.has-error]="formGroup.controls['nombre'].invalid && submitted">
+          <label class="control-label requerido" for="nombre">Nombre</label>
+          <input id="nombre" formControlName="nombre" type="text" class="form-control" [typeahead]="nombres_predefinidos" autocomplete="off">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group" [class.has-error]="formGroup.controls['version'].invalid && submitted">
+          <label class="control-label requerido" for="version">Version</label>
+          <input id="version" formControlName="version" type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <label for="organizacion_por">Organización por</label>
+          <select id="organizacion_por" class="form-control" formControlName="organizacion_por">
+            <option [ngValue]="null">Ninguna</option>
+            <option *ngFor="let org_por of organizaciones" [value]="org_por.id">{{org_por.codigo}} {{org_por.nombre}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <label for="organizacion_para">Organización para</label>
+          <select id="organizacion_para" class="form-control" formControlName="organizacion_para">
+            <option [ngValue]="null">Ninguna</option>
+            <option *ngFor="let org_para of organizaciones" [value]="org_para.id">{{org_para.codigo}} {{org_para.nombre}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-container>

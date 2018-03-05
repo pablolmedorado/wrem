@@ -1,0 +1,4 @@
+<div *ngIf="imagen">
+  <img [src]="imagen?.imagen" class="img-responsive center-block" alt="{{ imagen?.nombre }}">
+  <p class="text-center"><strong>Figura:</strong>&nbsp;{{ imagen?.nombre }}</p>
+</div>

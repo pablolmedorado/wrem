@@ -1,0 +1,85 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #ParticipanteForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="General">
+        <br>
+        <app-general-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-general-tab>
+      </tab>
+      <tab heading="Detalle">
+        <br>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['rol'].invalid && submitted">
+              <label class="control-label" for="objeto-rol">Rol</label>
+              <input id="objeto-rol" formControlName="rol" type="text" class="form-control">
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['organizacion'].invalid && submitted">
+              <label class="control-label" for="objeto-organizacion">Organizacion</label>
+              <select id="objeto-organizacion" formControlName="organizacion" class="form-control">
+                <option [ngValue]="null">Freelance</option>
+                <option *ngFor="let organizacion of organizacionesOptions" [value]="organizacion.id">{{ organizacion.codigo }} {{ organizacion.nombre }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div [class.has-error]="formGroup.controls['es_cliente'].invalid && submitted">
+              <div class="checkbox">
+                <label>
+                  <input id="objeto-es_cliente" formControlName="es_cliente" type="checkbox">
+                  &nbsp;El participante es un cliente
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div [class.has-error]="formGroup.controls['es_desarrollador'].invalid && submitted">
+              <div class="checkbox">
+                <label>
+                  <input id="objeto-es_desarrollador" formControlName="es_desarrollador" type="checkbox">
+                  &nbsp;El participante es un desarrollador
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div [class.has-error]="formGroup.controls['es_usuario'].invalid && submitted">
+              <div class="checkbox">
+                <label>
+                  <input id="objeto-es_usuario" formControlName="es_usuario" type="checkbox">
+                  &nbsp;El participante es un usuario
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+      <tab heading="Sección">
+        <br>
+        <app-organization-tab [objeto]="objeto" [documentoId]="documentoId" [formGroup]="formGroup"></app-organization-tab>
+      </tab>
+      <tab heading="Historia" *ngIf="objeto?.id">
+        <br>
+        <app-log-tab [objeto]="objeto"></app-log-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>

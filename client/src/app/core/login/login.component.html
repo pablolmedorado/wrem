@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default" style="margin-top: 20px;">
+            <div class="panel-heading" style="text-align: center;">
+                <h2 class="panel-title">Inicio de sesión</h2>
+            </div>
+            <div class="panel-body">
+                <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+                    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+                        <div class="input-group input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+                            <input type="email" class="form-control" name="email" placeholder="Email" [(ngModel)]="model.email" #email="ngModel" required />
+                        </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+                        <div class="input-group input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
+                            <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="model.password" #password="ngModel" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button [disabled]="loading" type="submit" class="btn btn-primary btn-block">Log In</button>
+                    </div>
+                    <div *ngIf="activado" class="alert alert-info" role="alert" style="text-align: center;">
+                        <span class="fa fa-check" aria-hidden="true"></span>&nbsp;
+                        Usuario activado. Ahora puede iniciar sesión.
+                    </div>
+                    <div *ngIf="error" class="alert alert-danger" role="alert" style="text-align: center;">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>{{error}}
+                    </div>
+                </form>
+            </div>
+        </div>
+        <p class="text-center"><a routerLink="/signup">Nuevo usuario</a></p>
+        <p class="text-center"><a href="/password_reset/">He olvidado mi contraseña</a></p>
+    </div>
+</div>

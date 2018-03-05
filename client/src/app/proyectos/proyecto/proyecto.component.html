@@ -1,0 +1,16 @@
+<div class="container">
+  <div *ngIf="proyecto">
+    <div class="row vertical-align">
+      <div class="col-xs-12">
+        <h1>
+          {{proyecto.nombre}}&nbsp;<small>Documentos</small>
+        </h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <app-documento-list [proyectoId]="proyecto.id"></app-documento-list>
+      </div>
+    </div>
+  </div>
+</div>

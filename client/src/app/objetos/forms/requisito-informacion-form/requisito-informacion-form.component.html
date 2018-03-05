@@ -1,0 +1,133 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #RequisitoInformacionForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="General">
+        <br>
+        <app-general-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-general-tab>
+      </tab>
+      <tab heading="Detalle">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['descripcion'].invalid && submitted">
+              <label class="control-label" for="objeto-descripcion">Concepto relevante</label>
+              <textarea id="objeto-descripcion" formControlName="descripcion" class="form-control" rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['tiempo_vida_max'].invalid && submitted">
+              <label class="control-label" for="objeto-tiempo_vida_max">Valor tiempo máximo de vida</label>
+              <input id="objeto-tiempo_vida_max" formControlName="tiempo_vida_max" type="number" min="0" class="form-control">
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['tiempo_vida_max_ud'].invalid && submitted">
+              <label class="control-label" for="objeto-tiempo_vida_max_ud">Unidad tiempo máximo de vida</label>
+              <select id="objeto-tiempo_vida_max_ud" formControlName="tiempo_vida_max_ud" class="form-control">
+                <option *ngFor="let unidad of tipos_unidades_tiempo" [value]="unidad.value">{{ unidad.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['tiempo_vida_med'].invalid && submitted">
+              <label class="control-label" for="objeto-tiempo_vida_med">Valor tiempo medio de vida</label>
+              <input id="objeto-tiempo_vida_med" formControlName="tiempo_vida_med" type="number" min="0" class="form-control">
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['tiempo_vida_med_ud'].invalid && submitted">
+              <label class="control-label" for="objeto-tiempo_vida_med_ud">Unidad tiempo medio de vida</label>
+              <select id="objeto-tiempo_vida_med_ud" formControlName="tiempo_vida_med_ud" class="form-control">
+                <option *ngFor="let unidad of tipos_unidades_tiempo" [value]="unidad.value">{{ unidad.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['ocurrencias_simultaneas_max'].invalid && submitted">
+              <label class="control-label" for="objeto-ocurrencias_simultaneas_max">Ocurrencias simultáneas máximas</label>
+              <input id="objeto-ocurrencias_simultaneas_max" formControlName="ocurrencias_simultaneas_max" type="number" min="0" class="form-control">
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['ocurrencias_simultaneas_med'].invalid && submitted">
+              <label class="control-label" for="objeto-ocurrencias_simultaneas_med">Ocurrencias simultáneas medias</label>
+              <input id="objeto-ocurrencias_simultaneas_med" formControlName="ocurrencias_simultaneas_med" type="number" min="0" class="form-control">
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Prioridad">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['importancia'].invalid && submitted">
+              <label class="control-label" for="objeto-importancia">Importancia</label>
+              <select id="objeto-importancia" formControlName="importancia" class="form-control">
+                <option *ngFor="let importancia of tipos_importancia" [value]="importancia.value">{{ importancia.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['urgencia'].invalid && submitted">
+              <label class="control-label" for="objeto-urgencia">Urgencia</label>
+              <select id="objeto-urgencia" formControlName="urgencia" class="form-control">
+                <option *ngFor="let urgencia of tipos_urgencia" [value]="urgencia.value">{{ urgencia.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['estado_desarrollo'].invalid && submitted">
+              <label class="control-label" for="objeto-estado_desarrollo">Estado de desarrollo</label>
+              <select id="objeto-estado_desarrollo" formControlName="estado_desarrollo" class="form-control">
+                <option *ngFor="let estado_desarrollo of tipos_estado_desarrollo" [value]="estado_desarrollo.value">{{ estado_desarrollo.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['estabilidad'].invalid && submitted">
+              <label class="control-label" for="objeto-estabilidad">Estabilidad</label>
+              <select id="objeto-estabilidad" formControlName="estabilidad" class="form-control">
+                <option *ngFor="let estabilidad of tipos_estabilidad" [value]="estabilidad.value">{{ estabilidad.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Rastreabilidad">
+        <br>
+        <app-tracking-tab [objeto]="objeto" [formGroup]="formGroup"></app-tracking-tab>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+      <tab heading="Sección">
+        <br>
+        <app-organization-tab [objeto]="objeto" [documentoId]="documentoId" [formGroup]="formGroup"></app-organization-tab>
+      </tab>
+      <tab heading="Historia" *ngIf="objeto?.id">
+        <br>
+        <app-log-tab [objeto]="objeto"></app-log-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>

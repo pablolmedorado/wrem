@@ -1,0 +1,98 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #ObjetivoForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="General">
+        <br>
+        <app-general-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-general-tab>
+      </tab>
+      <tab heading="Detalle">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['padre'].invalid && submitted">
+              <label class="control-label" for="objeto-padre">Padre</label>
+              <select id="objeto-padre" formControlName="padre" class="form-control">
+                <option [value]="null">Ninguno</option>
+                <option *ngFor="let padre of objetivosOptions" [value]="padre.id">{{ padre.codigo }} {{ padre.nombre }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['descripcion'].invalid && submitted">
+              <label class="control-label" for="objeto-descripcion">El sistema deberá</label>
+              <textarea id="objeto-descripcion" formControlName="descripcion" class="form-control" rows="6" placeholder="Objetivo"></textarea>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Prioridad">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['importancia'].invalid && submitted">
+              <label class="control-label" for="objeto-importancia">Importancia</label>
+              <select id="objeto-importancia" formControlName="importancia" class="form-control">
+                <option *ngFor="let importancia of tipos_importancia" [value]="importancia.value">{{ importancia.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['urgencia'].invalid && submitted">
+              <label class="control-label" for="objeto-urgencia">Urgencia</label>
+              <select id="objeto-urgencia" formControlName="urgencia" class="form-control">
+                <option *ngFor="let urgencia of tipos_urgencia" [value]="urgencia.value">{{ urgencia.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['estado_desarrollo'].invalid && submitted">
+              <label class="control-label" for="objeto-estado_desarrollo">Estado de desarrollo</label>
+              <select id="objeto-estado_desarrollo" formControlName="estado_desarrollo" class="form-control">
+                <option *ngFor="let estado_desarrollo of tipos_estado_desarrollo" [value]="estado_desarrollo.value">{{ estado_desarrollo.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['estabilidad'].invalid && submitted">
+              <label class="control-label" for="objeto-estabilidad">Estabilidad</label>
+              <select id="objeto-estabilidad" formControlName="estabilidad" class="form-control">
+                <option *ngFor="let estabilidad of tipos_estabilidad" [value]="estabilidad.value">{{ estabilidad.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Rastreabilidad">
+        <br>
+        <app-tracking-tab [objeto]="objeto" [formGroup]="formGroup"></app-tracking-tab>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+      <tab heading="Sección">
+        <br>
+        <app-organization-tab [objeto]="objeto" [documentoId]="documentoId" [formGroup]="formGroup"></app-organization-tab>
+      </tab>
+      <tab heading="Historia" *ngIf="objeto?.id">
+        <br>
+        <app-log-tab [objeto]="objeto"></app-log-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>

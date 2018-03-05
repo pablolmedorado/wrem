@@ -1,0 +1,18 @@
+<ng-container *ngIf="proyectoId">
+    <div class="menu-bar">
+        <ul class="item-list">
+            <li class="item" *ngFor="let item of menu">
+                <span class="item-link" (click)="item.command($event)" tooltip="{{ item.title }}" placement="bottom">
+                    <i class="fa {{ item.icon }}" aria-hidden="true"></i>
+                </span>
+            </li>
+        </ul>
+        <ul class="item-list" style="margin-left: 1em;">
+            <li class="item" *ngFor="let item of objetos">
+                <span class="item-link" (click)="item.command($event)" tooltip="{{ item.title }} ({{ item.acronym }})" placement="bottom">
+                    <i class="fa {{ item.icon }}" aria-hidden="true"></i>
+                </span>
+            </li>
+        </ul>
+    </div>
+</ng-container>

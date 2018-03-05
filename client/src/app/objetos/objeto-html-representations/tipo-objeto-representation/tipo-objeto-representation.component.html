@@ -1,0 +1,180 @@
+<ng-container *ngIf="tipo_objeto">
+  <table border="1" width="100%">
+    <tr bgcolor="#c8e0e0">
+      <th align="left" valign="top">{{ tipo_objeto.codigo }}</th>
+      <th align="left" valign="top" width="100%" colspan="3">{{ tipo_objeto.nombre }}</th>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Versión</th>
+      <td align="left" valign="top" colspan="3">{{ tipo_objeto.version }} ({{ tipo_objeto.fecha_version | date: 'dd/MM/yyyy' }})</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Autores</th>
+      <td align="left" valign="top" colspan="3">
+        <ul *ngIf="tipo_objeto.autores?.length; else blockInterrogacion">
+          <li *ngFor="let autor of tipo_objeto.autores">{{ objetos.get(autor).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Fuentes</th>
+      <td align="left" valign="top" colspan="3">
+        <ul *ngIf="tipo_objeto.fuentes?.length; else blockInterrogacion">
+          <li *ngFor="let fuente of tipo_objeto.fuentes">{{ objetos.get(fuente).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Dependencias</th>
+      <td align="left" valign="top" colspan="3">
+        <ul *ngIf="tipo_objeto.trazabilidad_desde?.length; else blockNinguno">
+          <li *ngFor="let dependencia of tipo_objeto.trazabilidad_desde">[{{objetos.get(dependencia).codigo}}] {{ objetos.get(dependencia).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Descripción</th>
+      <td colspan="3" align="left" valign="top">
+          Este tipo <ng-container *ngIf="tipo_objeto.es_abstracto">abstracto</ng-container> de objetos representa
+          <em *ngIf="tipo_objeto.descripcion; else blockPD">{{ tipo_objeto.descripcion }}</em> 
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Supertipo</th>
+      <td colspan="3" align="left" valign="top">
+        <ng-container *ngIf="tipo_objeto.supertipo; else blockNinguno">[{{ objetos.get(tipo_objeto.supertipo).codigo }}] {{objetos.get(tipo_objeto.supertipo).nombre}}</ng-container>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Subtipos<span *ngIf="subtipos.length"> ({{ tipos_especializacion[tipo_objeto.subtipo] }})</span></th>
+      <td colspan="3" align="left" valign="top">
+        <ul *ngIf="subtipos.length; else blockNinguno">
+          <li *ngFor="let subtipo of subtipos">[{{ subtipo.codigo }}] {{ subtipo.nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <!-- Componentes -->
+    <ng-container *ngIf="tipo_objeto.componentes?.length; else noComponentes">
+      <tr>
+        <th align="left" valign="top" [attr.rowspan]="tipo_objeto.componentes.length + 1">Componentes</th>
+        <th align="left" valign="top">Nombre</th>
+        <th align="left" valign="top">Tipo</th>
+        <th align="left" valign="top">Multiplicidad</th>
+      </tr>
+      <tr *ngFor="let componente of tipo_objeto.componentes">
+        <td align="left" valign="top">{{ componente.nombre }}</td>
+        <td align="left" valign="top">
+          <code ngSwitch="{{ componente.tipo }}">
+            <ng-container *ngSwitchCase="'S'">{{ objetos.get(componente.tipo_base).nombre }}</ng-container>
+            <ng-container *ngSwitchCase="'C'">Set ({{ objetos.get(componente.tipo_base).nombre })}</ng-container>
+            <ng-container *ngSwitchCase="'SE'">Sequence ({{ objetos.get(componente.tipo_base).nombre }})</ng-container>
+            <ng-container *ngSwitchCase="'B'">Bag ({{ objetos.get(componente.tipo_base).nombre }})</ng-container>
+          </code>
+        </td>
+        <td align="left" valign="top" ngSwitch="{{ componente.tipo }}">
+          <ng-container *ngSwitchCase="'S'">1</ng-container>
+          <ng-container *ngSwitchDefault>
+            <ng-container *ngIf="componente.multiplicidad_inferior; else blockPD">{{ componente.multiplicidad_inferior }}</ng-container>..
+            <ng-container *ngIf="componente.multiplicidad_superior; else blockPD">{{ componente.multiplicidad_superior }}</ng-container>
+          </ng-container>
+        </td>
+      </tr>
+    </ng-container>
+    <ng-template #noComponentes>
+      <tr>
+        <th align="left" valign="top" rowspan="2">Componentes</th>
+        <th align="left" valign="top">Nombre</th>
+        <th align="left" valign="top">Tipo</th>
+        <th align="left" valign="top">Multiplicidad</th>
+      </tr>
+      <tr>
+        <td align="left" valign="top">-</td><td>-</td><td>-</td>
+      </tr>
+    </ng-template>
+    <!-- Fin componentes -->
+    <tr>
+      <th align="left" valign="top">Comentarios</th>
+      <td align="left" valign="top" colspan="3">
+        <ng-container *ngIf="tipo_objeto.comentarios; else blockNinguno">{{ tipo_objeto.comentarios }}</ng-container>
+      </td>
+    </tr>
+  </table>
+  <ng-container *ngFor="let atributo of tipo_objeto.atributos">
+    <br>
+    <table border="1" width="100%" >
+      <tr bgcolor="#c8e0e0">
+        <th align="left" valign="top" nowrap="1">
+          Atributo {{ tipos_propiedad[atributo.tipo_propiedad] }}
+        </th>
+        <th align="left" valign="top" width="100%">
+          {{ tipo_objeto.nombre }}:: {{ atributo.nombre }}
+        </th>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Descripción</th>
+        <td align="left" valign="top">
+          Este atributo representa <em *ngIf="atributo.descripcion; else blockPD">{{ atributo.descripcion }}</em>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Tipo</th>
+        <td align="left" valign="top">
+          <code ngSwitch="{{ atributo.tipo }}">
+            <ng-container *ngSwitchCase="'S'">
+              <ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'C'">
+              Set (<ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>)
+            </ng-container>
+            <ng-container *ngSwitchCase="'SE'">
+              Sequence (<ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>)
+            </ng-container>
+            <ng-container *ngSwitchCase="'B'">
+              Bag (<ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>)
+            </ng-container>
+          </code>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Comentarios</th>
+        <td align="left" valign="top" colspan="1">
+          <ng-container *ngIf="atributo.comentarios; else blockNinguno">{{ atributo.comentarios }}</ng-container>
+        </td>
+      </tr>
+    </table>
+  </ng-container>
+  <ng-container *ngFor="let expresion of tipo_objeto.expresiones">
+    <br>
+    <table border="1" width="100%">
+      <tr bgcolor="#c8e0e0">
+        <th align="left" valign="top" nowrap="1">Expresión de invariante</th>
+        <th align="left" valign="top" width="100%">{{ tipo_objeto.nombre }}:: {{ expresion.nombre }}</th>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Descripción</th>
+        <td align="left" valign="top" colspan="1">
+          <ng-container *ngIf="expresion.expresion_lenguaje_natural; else blockPD">{{ expresion.expresion_lenguaje_natural }}</ng-container>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Expresión OCL</th>
+        <td align="left" valign="top">
+          <code *ngIf="expresion.expresion_ocl">{{ expresion.expresion_ocl }}</code>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Comentarios</th>
+        <td align="left" valign="top" colspan="1">
+          <ng-container *ngIf="expresion.comentarios; else blockNinguno">{{ expresion.comentarios }}</ng-container>
+        </td>
+      </tr>
+    </table>
+  </ng-container>
+</ng-container>
+<ng-template #blockPD><span style="color:red;"><b>PD</b></span></ng-template>
+<ng-template #blockInterrogacion><span style="color:red;"><b>?</b></span></ng-template>
+<ng-template #blockNinguno>Ninguno</ng-template>

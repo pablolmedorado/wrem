@@ -1,0 +1,140 @@
+<div class="container">
+  <div class="row vertical-align">
+    <div class="col-xs-5">
+      <div class="pull-left">
+        Total:&nbsp;<span class="badge">{{item_count || 0}}</span>
+        <span *ngIf="search" style="margin-left:15px;">Filtro:&nbsp;<span class="label label-primary">%{{search | truncate : 30}}%</span></span>
+      </div>      
+    </div>
+    <div class="col-xs-4">
+      <div class="input-group">
+        <input type="text" class="form-control" aria-label="..." placeholder="Filtrar..." [(ngModel)]="search_query" (keydown.enter)="filter()">
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="button" tooltip="Limpiar (mostrar todos)" (click)="clearFilter()"><i class="fa fa-eraser" aria-hidden="true"></i></button>
+          <button class="btn btn-default" type="button" tooltip="Filtrar" (click)="filter()"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-3">
+      <div class="pull-right">
+        <button type="button" (click)="listProyectos()" class="btn btn-info" aria-label="Recargar lista">
+          <i class="fa fa-refresh" aria-hidden="true"></i>
+        </button>
+        <button type="button" (click)="newProyecto()" class="btn btn-primary" aria-label="Nuevo proyecto">
+          <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;<i class="fa fa-folder-open-o" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div *ngIf="proyectos?.length">
+    <div class="row">
+      <div class="col-xs-12">
+        <table class="table text-center">
+          <thead>
+            <tr>
+              <th class="text-center" (click)="order('id')"><i class="fa" [class.fa-sort-numeric-desc]="ordering==='-id'" [class.fa-sort-numeric-asc]="ordering==='id'" aria-hidden="true"></i>&nbsp;&nbsp;Id</th>
+              <th class="text-center" (click)="order('nombre')"><i class="fa" [class.fa-sort-alpha-desc]="ordering==='-nombre'" [class.fa-sort-alpha-asc]="ordering==='nombre'" aria-hidden="true"></i>&nbsp;&nbsp;Nombre</th>
+              <th class="text-center" (click)="order('creado')"><i class="fa" [class.fa-sort-amount-desc]="ordering==='-creado'" [class.fa-sort-amount-asc]="ordering==='creado'" aria-hidden="true"></i>&nbsp;&nbsp;Fecha de creación</th>
+              <th class="text-center">Origen&nbsp;<i class="fa fa-info-circle" aria-hidden="true" tooltip="Indica si el proyecto es de su autoria o pertenece a un grupo compartido."></i></th>
+              <th class="text-center" (click)="order('fecha_ultima_apertura')"><i class="fa" [class.fa-sort-amount-desc]="ordering==='-fecha_ultima_apertura'" [class.fa-sort-amount-asc]="ordering==='fecha_ultima_apertura'" aria-hidden="true"></i>&nbsp;&nbsp;Bloqueado&nbsp;<i class="fa fa-info-circle" aria-hidden="true" tooltip="Indica si el proyecto se encuentra bloqueado por encontrarse en uso."></i></th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let proyecto of proyectos">
+              <td>{{proyecto.id}}</td>
+              <td (dblclick)="proyectoDetail(proyecto)">{{proyecto.nombre | truncate : 50 }}</td>
+              <td>{{proyecto.creado | date: 'dd/MM/yyyy HH:mm'}}</td>
+              <td>
+                <ng-container *ngIf="proyecto.autor !== auth.usuario.id; else blockPersonal">
+                  <i class="fa fa-share-alt" [popover]="blockGrupos" popoverTitle="Grupos desde los que tiene acceso" triggers="mouseenter:mouseleave"></i>
+                </ng-container>
+                <ng-template #blockPersonal>
+                  <i class="fa fa-user"></i>
+                </ng-template>
+                <ng-template #blockGrupos>
+                  <ul>
+                    <ng-container *ngFor="let grupo of proyecto.grupos; let last=last">
+                      <li *ngIf="grupos[grupo]">{{ grupos[grupo].nombre }}</li>
+                    </ng-container>
+                  </ul>
+                </ng-template>
+              </td>
+              <td>
+                <i class="fa" 
+                  [class.fa-lock]="!proyecto.editable" [style.color]="proyecto.editable ? 'green' : 'red'"
+                  [class.fa-unlock]="proyecto.editable"
+                  aria-hidden="true" popover="{{proyecto.fecha_ultima_apertura ? (proyecto.fecha_ultima_apertura | date: 'dd/MM/yyyy HH:mm') : 'Aún no abierto' }}" popoverTitle="Fecha de última apertura" triggers="mouseenter:mouseleave"></i>
+              </td>
+              <td>
+                <button type="button" (click)="proyectoDetail(proyecto)" class="btn btn-sm btn-primary" aria-label="Abrir proyecto" [disabled]="!proyecto.editable">
+                  <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+                </button>
+                <button type="button" (click)="editProyecto(proyecto)" class="btn btn-sm btn-info" aria-label="Editar datos del proyecto" [disabled]="!proyecto.editable">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                </button>
+                <button type="button" (click)="deleteProyecto(proyecto)" class="btn btn-sm btn-danger" aria-label="Eliminar proyecto" [disabled]="!proyecto.editable">
+                  <i class="fa fa-trash-o" aria-hidden="true"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>    
+        </table>
+      </div>
+    </div>
+    <div class="row vertical-align">
+      <div class="col-xs-6" style="padding-bottom: 8px;">
+        <div class="pull-left">
+          <span>Tamaño de página</span>
+          <select style="width:65px;display:inline;" class="form-control input-sm" id="page_size" [(ngModel)]="page_size" (ngModelChange)="setPageSize($event)" name="page_size">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="pull-right">
+          <pagination [totalItems]="item_count" [(ngModel)]="current_page" [maxSize]="max_pager_size" class="pagination-sm"
+                    [boundaryLinks]="true" [rotate]="true" [itemsPerPage]="page_size" (pageChanged)="pageChanged($event)"
+                    (numPages)="number_of_pages = $event" previousText="Anterior" nextText="Siguiente" firstText="Primera"
+                    lastText="Última"></pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!proyectos?.length">
+    <div class="row">
+      <div class="col-xs-12">
+        <alert type="warning" dismissible="true">Sin resultados.</alert>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #proyectoModal="bs-modal" [config]="{backdrop: 'static'}" (onHidden)="clearSelectedProyecto()" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">{{ selectedProyecto?.id ? 'Editar proyecto' : 'Nuevo proyecto' }}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="proyectoModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-container *ngIf="selectedProyecto">
+          <app-proyecto-form #ProyectoForm='ProyectoForm'
+            [proyecto]="selectedProyecto"
+            (init)="formInit($event, ProyectoForm)"
+            (onSuccess)="onProyectosUpdate($event)">
+          </app-proyecto-form>
+        </ng-container>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="proyectoModal.hide()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="proyectoForm?.form.ngSubmit.emit()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

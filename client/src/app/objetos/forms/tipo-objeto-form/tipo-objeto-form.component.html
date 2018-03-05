@@ -1,0 +1,86 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #TipoObjetoForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="General">
+        <br>
+        <app-general-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-general-tab>
+      </tab>
+      <tab heading="Detalle">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div [class.has-error]="formGroup.controls['es_abstracto'].invalid && submitted">
+              <div class="checkbox">
+                <label>
+                  <input id="objeto-es_abstracto" formControlName="es_abstracto" type="checkbox">
+                  &nbsp;Este tipo de objetos es abstracto
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['supertipo'].invalid && submitted">
+              <label class="control-label" for="objeto-supertipo">Generalización (supertipo)</label>
+              <select id="objeto-supertipo" formControlName="supertipo" class="form-control">
+                <option [value]="null">Ninguno</option>
+                <option *ngFor="let tipo of tiposOptions" [value]="tipo.id">{{ tipo.codigo }} - {{ tipo.nombre }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="tiene_subtipos">
+          <div class="col-xs-6">
+            <div class="form-group" [class.has-error]="formGroup.controls['subtipo'].invalid && submitted">
+              <label class="control-label" for="objeto-subtipo">Especialización</label>
+              <select id="objeto-subtipo" formControlName="subtipo" class="form-control">
+                <option *ngFor="let tipo of tipos_especializacion" [value]="tipo.value">{{ tipo.label }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <label class="control-label" for="objeto-subtipos">Subtipos</label>
+            <select id="objeto-subtipos" class="form-control" size="6" multiple readonly>
+              <option *ngFor="let subtipo of subtipos" value="{{subtipo.id}}">[{{subtipo.codigo}}] {{subtipo.nombre}}</option>
+            </select>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Descripción">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['descripcion'].invalid && submitted">
+              <label class="control-label" for="objeto-descripcion">Este tipo de objetos representa...</label>
+              <textarea id="objeto-descripcion" formControlName="descripcion" class="form-control" rows="10" placeholder="Descripción"></textarea>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Rastreabilidad">
+        <br>
+        <app-tracking-tab [objeto]="objeto" [formGroup]="formGroup"></app-tracking-tab>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+      <tab heading="Sección">
+        <br>
+        <app-organization-tab [objeto]="objeto" [documentoId]="documentoId" [formGroup]="formGroup"></app-organization-tab>
+      </tab>
+      <tab heading="Historia" *ngIf="objeto?.id">
+        <br>
+        <app-log-tab [objeto]="objeto"></app-log-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>

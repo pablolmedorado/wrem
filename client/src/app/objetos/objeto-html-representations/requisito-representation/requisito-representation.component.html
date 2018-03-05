@@ -1,0 +1,83 @@
+<ng-container *ngIf="requisito">
+  <table border="1" width="100%">
+    <tr bgcolor="#c8e0e0">
+      <th align="left" valign="top">{{ requisito.codigo }}</th>
+      <th align="left" valign="top" width="100%" colspan="2">{{ requisito.nombre }}</th>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Versión</th>
+      <td align="left" valign="top" colspan="2">{{ requisito.version }} ({{ requisito.fecha_version | date: 'dd/MM/yyyy' }})</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Autores</th>
+      <td align="left" valign="top" colspan="2">
+        <ul *ngIf="requisito.autores?.length; else blockInterrogacion">
+          <li *ngFor="let autor of requisito.autores">{{ objetos.get(autor).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Fuentes</th>
+      <td align="left" valign="top" colspan="2">
+        <ul *ngIf="requisito.fuentes?.length; else blockInterrogacion">
+          <li *ngFor="let fuente of requisito.fuentes">{{ objetos.get(fuente).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Dependencias</th>
+      <td align="left" valign="top" colspan="2">
+        <ul *ngIf="requisito.trazabilidad_desde?.length; else blockNinguno">
+          <li *ngFor="let dependencia of requisito.trazabilidad_desde">[{{objetos.get(dependencia).codigo}}] {{ objetos.get(dependencia).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Descripción</th>
+      <td align="left" valign="top" colspan="2">
+        <ng-container ngSwitch="{{ requisito.tipo }}">
+          <ng-container *ngSwitchCase="'R'">
+            La información almacenada por el sistema deberá satisfacer la siguiente restricción:
+            <em *ngIf="requisito.descripcion; else blockPD">{{ requisito.descripcion }}</em>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            El sistema deberá <em *ngIf="requisito.descripcion; else blockPD">{{ requisito.descripcion }}</em>
+          </ng-container>
+        </ng-container>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Importancia</th>
+      <td align="left" valign="top" colspan="2">
+        <span *ngIf="requisito.importancia !== 'PD'; else blockPD">{{ tipos_importancia[requisito.importancia] }}</span>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Urgencia</th>
+      <td align="left" valign="top" colspan="2">
+        <span *ngIf="requisito.urgencia !== 'PD'; else blockPD">{{ tipos_urgencia[requisito.urgencia] }}</span>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Estado</th>
+      <td align="left" valign="top" colspan="2">
+        <span *ngIf="requisito.estado_desarrollo !== 'PD'; else blockPD">{{ tipos_estado_desarrollo[requisito.estado_desarrollo] }}</span>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Estabilidad</th>
+      <td align="left" valign="top" colspan="2">
+        <span *ngIf="requisito.estabilidad !== 'PD'; else blockPD">{{ tipos_estabilidad[requisito.estabilidad] }}</span>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Comentarios</th>
+      <td align="left" valign="top" colspan="2">
+        {{ requisito.comentarios || 'Ninguno' }}
+      </td>
+    </tr>
+  </table>
+</ng-container>
+<ng-template #blockPD><span style="color:red;"><b>PD</b></span></ng-template>
+<ng-template #blockInterrogacion><span style="color:red;"><b>?</b></span></ng-template>
+<ng-template #blockNinguno>Ninguno</ng-template>

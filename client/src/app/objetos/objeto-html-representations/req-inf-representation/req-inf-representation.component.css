@@ -1,0 +1,13 @@
+table {
+    border: black solid;
+}
+td, th{
+    padding: 0px 3px;
+}
+th > a {
+    color: #333;
+}
+ul {
+    padding: 0px 0px 0px 20px;
+    margin-bottom: 0px;
+}

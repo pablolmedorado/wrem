@@ -1,0 +1,35 @@
+<ng-container *ngIf="participante">
+  <table border="1" width="100%">
+    <tr bgcolor="#c8e0e0">
+      <th align="left" valign="top">Participante</th>
+      <th align="left" valign="top" width="100%">{{ participante.nombre }}</th>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Organización</th>
+      <td align="left" valign="top">{{ organizacion?.nombre || 'Freelance'}}</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Rol</th>
+      <td align="left" valign="top" colspan="1">
+        <ng-container *ngIf="participante.rol; else blockPD">{{ participante.rol }}</ng-container>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top" nowrap="1">Es desarrollador</th>
+      <td align="left" valign="top">{{ participante.es_desarrollador ? 'Si' : 'No' }}</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Es cliente</th>
+      <td align="left" valign="top">{{ participante.es_cliente ? 'Si' : 'No' }}</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Es usuario</th>
+      <td align="left" valign="top">{{ participante.es_usuario ? 'Si' : 'No' }}</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Comentarios</th>
+      <td align="left" valign="top" colspan="1">{{ participante.comentarios || 'Ninguno '}}</td>
+    </tr>
+  </table>
+</ng-container>
+<ng-template #blockPD><span style="color:red;"><b>PD</b></span></ng-template>

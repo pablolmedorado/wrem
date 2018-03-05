@@ -1,0 +1,60 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #ImagenForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="General">
+        <br>
+        <app-general-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-general-tab>
+      </tab>
+      <tab heading="Detalle">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="show_size_error || show_type_error">
+              <label class="control-label requerido" for="objeto-imagen">Fichero (máximo 3 MB)</label>
+              <input id="objeto-imagen" class="form-control" type="file" ng2FileSelect (change)="onFileChange($event)" />
+            </div>            
+          </div>
+        </div>
+        <div class="row" *ngIf="show_size_error || show_type_error">
+          <div class="col-xs-12">
+            <alert type="danger" dismissible="true">
+              <p>Errores:</p>
+              <ul>
+                <li *ngIf="show_size_error">El fichero seleccionado excede el tamaño máximo permitido</li>
+                <li *ngIf="show_type_error">El fichero seleccionado no es una imagen</li>
+              </ul>
+            </alert>
+          </div>
+        </div>
+        <div class="row" *ngIf="imagen">
+          <div class="col-xs-8 col-xs-offset-2">
+            <img [src]="imagen" class="img-responsive img-thumbnail center-block" alt="Responsive image">
+          </div>
+        </div>
+      </tab>
+      <tab heading="Rastreabilidad">
+        <br>
+        <app-tracking-tab [objeto]="objeto" [formGroup]="formGroup"></app-tracking-tab>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+      <tab heading="Sección">
+        <br>
+        <app-organization-tab [objeto]="objeto" [documentoId]="documentoId" [formGroup]="formGroup"></app-organization-tab>
+      </tab>
+      <tab heading="Historia" *ngIf="objeto?.id">
+        <br>
+        <app-log-tab [objeto]="objeto"></app-log-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,294 @@
+<p-growl [(value)]="growlMsgs" [life]="4000"></p-growl>
+<ng-container *ngIf="documento">
+  <div style="margin-top: 20px;">
+    <app-objeto-menu-bar [proyectoId]="documento.proyecto.id" (onCreateObjeto)="modalInit($event)" (onPrint)="print()"></app-objeto-menu-bar>
+  </div>
+  <div class="container-fluid" *ngIf="cargado; else blockProgress">
+      <div class="row">
+        <div class="col-xs-4 col-lg-3">
+          <app-objeto-tree
+            [documento]="documento"
+            (onEdit)="modalInit($event)">
+          </app-objeto-tree>
+        </div>
+        <div class="col-xs-8 col-lg-9">
+          <div id="print-section">
+            <app-documento-header [documento]="documento"></app-documento-header>
+            <hr>
+            <app-objeto-list-html [documento]="documento"></app-objeto-list-html>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="modal fade" bsModal #formModal="bs-modal" [config]="{backdrop: 'static'}" (onHidden)="clearTipoModal()" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title pull-left">{{ form_modal_title }}</h4>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="formModal.hide()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div ngSwitch="{{ formModalInfo?.tipo }}">
+              <ng-container *ngSwitchCase="'seccionrem'">
+                <app-seccion-form #SeccionForm='SeccionForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, SeccionForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-seccion-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'parraforem'">
+                <app-parrafo-form #ParrafoForm='ParrafoForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, ParrafoForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-parrafo-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'organizacionrem'">
+                <app-organizacion-form #OrganizacionForm='OrganizacionForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, OrganizacionForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-organizacion-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'participanterem'">
+                <app-participante-form #ParticipanteForm='ParticipanteForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, ParticipanteForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-participante-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'reunionrem'">
+                <app-reunion-form #ReunionForm='ReunionForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, ReunionForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-reunion-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'objetivorem'">
+                <app-objetivo-form #ObjetivoForm='ObjetivoForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, ObjetivoForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-objetivo-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'actorrem'">
+                <app-actor-form #ActorForm='ActorForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, ActorForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-actor-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'requisitoinformacionrem'">
+                <app-requisito-informacion-form #RequisitoInformacionForm='RequisitoInformacionForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, RequisitoInformacionForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-requisito-informacion-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'datoespecificorem'">
+                <app-dato-especifico-form #DatoEspecificoForm='DatoEspecificoForm'
+                  [objetoId]="formModalInfo.id"
+                  [objetoPadreId]="formModalInfo.padre_id" 
+                  (init)="formInit($event, DatoEspecificoForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-dato-especifico-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'requisitorem'">
+                <app-requisito-form #RequisitoForm='RequisitoForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  [tipo]="formModalInfo.subtipo"
+                  (init)="formInit($event, RequisitoForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-requisito-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'casodeusorem'">
+                <app-caso-uso-form #CasoUsoForm='CasoUsoForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, CasoUsoForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-caso-uso-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'pasocurem'">
+                <app-paso-cu-form #PasoCUForm='PasoCUForm'
+                  [objetoId]="formModalInfo.id"
+                  [objetoPadreId]="formModalInfo.padre_id"
+                  (init)="formInit($event, PasoCUForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-paso-cu-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'excepcionpasocurem'">
+                <app-excepcion-paso-cu-form #ExcepcionPasoCUForm='ExcepcionPasoCUForm'
+                  [objetoId]="formModalInfo.id"
+                  [objetoPadreId]="formModalInfo.padre_id"
+                  [objetoAbueloId]="formModalInfo.abuelo_id"
+                  (init)="formInit($event, ExcepcionPasoCUForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-excepcion-paso-cu-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'tipoobjetorem'">
+                <app-tipo-objeto-form #TipoObjetoForm='TipoObjetoForm'
+                  [objetoId]="formModalInfo.id" 
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, TipoObjetoForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-tipo-objeto-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'componenterem'">
+                <app-componente-form #ComponenteForm='ComponenteForm'
+                  [objetoId]="formModalInfo.id"
+                  [objetoPadreId]="formModalInfo.padre_id"
+                  (init)="formInit($event, ComponenteForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-componente-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'atributorem'">
+                <app-atributo-form #AtributoForm='AtributoForm'
+                  [objetoId]="formModalInfo.id"
+                  [objetoPadreId]="formModalInfo.padre_id"
+                  [objetoPadreTipo]="formModalInfo.tipo_padre"
+                  (init)="formInit($event, AtributoForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-atributo-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'expresionrem'">
+                <app-expresion-form #ExpresionForm='ExpresionForm'
+                  [objetoId]="formModalInfo.id"
+                  [objetoPadreId]="formModalInfo.padre_id"
+                  [objetoPadreTipo]="formModalInfo.tipo_padre"
+                  [tipo]="formModalInfo.subtipo"
+                  (init)="formInit($event, ExpresionForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-expresion-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'tipovalorrem'">
+                <app-tipo-valor-form #TipoValorForm='TipoValorForm'
+                  [objetoId]="formModalInfo.id"
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, TipoValorForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-tipo-valor-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'asociacionrem'">
+                <app-asociacion-form #AsociacionForm='AsociacionForm'
+                  [objetoId]="formModalInfo.id"
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, AsociacionForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-asociacion-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'rolrem'">
+                <app-rol-form #RolForm='RolForm'
+                  [objetoId]="formModalInfo.id"
+                  [objetoPadreId]="formModalInfo.padre_id"
+                  (init)="formInit($event, RolForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-rol-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'operacionsistemarem'">
+                <app-operacion-sistema-form #OperacionSistemaForm='OperacionSistemaForm'
+                  [objetoId]="formModalInfo.id"
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, OperacionSistemaForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-operacion-sistema-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'parametrorem'">
+                <app-parametro-form #ParametroForm='ParametroForm'
+                  [objetoId]="formModalInfo.id"
+                  [objetoPadreId]="formModalInfo.padre_id"
+                  (init)="formInit($event, ParametroForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-parametro-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'excepcionosrem'">
+                <app-excepcion-os-form #ExcepcionOSForm='ExcepcionOSForm'
+                  [objetoId]="formModalInfo.id"
+                  [objetoPadreId]="formModalInfo.padre_id"
+                  (init)="formInit($event, ExcepcionOSForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-excepcion-os-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'conflictorem'">
+                <app-conflicto-form #ConflictoForm='ConflictoForm'
+                  [objetoId]="formModalInfo.id"
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, ConflictoForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-conflicto-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'alternativarem'">
+                <app-alternativa-form #AlternativaForm='AlternativaForm'
+                  [objetoId]="formModalInfo.id"
+                  [objetoPadreId]="formModalInfo.padre_id"
+                  [objetoPadreTipo]="formModalInfo.tipo_padre"
+                  (init)="formInit($event, AlternativaForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-alternativa-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'defectorem'">
+                <app-defecto-form #DefectoForm='DefectoForm'
+                  [objetoId]="formModalInfo.id"
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, DefectoForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-defecto-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'peticioncambiorem'">
+                <app-peticion-cambio-form #PeticionCambioForm='PeticionCambioForm'
+                  [objetoId]="formModalInfo.id"
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, PeticionCambioForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-peticion-cambio-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'imagenrem'">
+                <app-imagen-form #ImagenForm='ImagenForm'
+                  [objetoId]="formModalInfo.id"
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, ImagenForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-imagen-form>
+              </ng-container>
+              <ng-container *ngSwitchCase="'matriztrazabilidadrem'">
+                <app-matriz-trazabilidad-form #MatrizTrazabilidadForm='MatrizTrazabilidadForm'
+                  [objetoId]="formModalInfo.id"
+                  [documentoId]="documento.id"
+                  (init)="formInit($event, MatrizTrazabilidadForm)"
+                  (onSubmittedForm)="hideFormModal()">
+                </app-matriz-trazabilidad-form>
+              </ng-container>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" (click)="formModal.hide()">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="objetoForm?.form.ngSubmit.emit()">Aceptar</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="container">
+    <div class="row" style="margin-top: 40px;">
+      <div class="col-xs-8 col-xs-offset-2">
+        <div class="progress">
+          <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+            <span class="sr-only">Cargando</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+</ng-template>

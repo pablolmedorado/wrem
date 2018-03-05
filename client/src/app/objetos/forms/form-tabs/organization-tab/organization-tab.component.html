@@ -1,0 +1,39 @@
+<div class="row" *ngIf="!objeto.id; else cambiarSeccion" [formGroup]="formGroup">
+  <div class="col-xs-6">
+    <label for="objeto-seccion">Sección</label>
+    <select id="objeto-seccion" class="form-control" formControlName="seccion">
+      <option [ngValue]="null">Raíz del documento</option>
+      <option *ngFor="let seccion of seccionesOptions" [value]="seccion.id">{{ seccion.codigo }} {{ seccion.nombre }}</option>
+    </select>
+  </div>
+</div>
+<ng-template #cambiarSeccion>
+  <div class="row">
+    <div class="col-xs-12">
+      <alert type="warning" dismissible="true">La acción de cambio de sección es independiente del resto del formulario. Confirme con el botón 'Mover' para proceder.</alert>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-5">
+      <label class="control-label" for="objeto-seccion">Sección actual</label>
+      <select id="objeto-seccion" name="seccion" class="form-control" [(ngModel)]="objeto.seccion" disabled>
+        <option [ngValue]="null">Raíz del documento</option>
+        <option *ngFor="let seccion of seccionesOptions" [ngValue]="seccion.id">{{ seccion.codigo }} {{ seccion.nombre }}</option>
+      </select>
+    </div>
+    <div class="col-xs-5">
+      <label class="control-label" for="objeto-seccion">Sección destino</label>
+      <select id="objeto-seccion" name="seccion" class="form-control" [(ngModel)]="seccion_destino" [ngModelOptions]="{standalone: true}">
+        <option [ngValue]="null">Raíz del documento</option>
+        <option *ngFor="let seccion of seccionesOptions" [ngValue]="seccion.id">{{ seccion.codigo }} {{ seccion.nombre }}</option>
+      </select>
+    </div>
+    <div class="col-xs-2">
+      <button type="button" class="btn btn-primary btn-block" style="margin-top: 24px;"
+        [disabled]="objeto.seccion === seccion_destino"
+        (click)="changeSeccion(seccion_destino)">
+        <i class="fa fa-exchange" aria-hidden="true"></i>&nbsp;Mover
+      </button>
+    </div>
+  </div>
+</ng-template>

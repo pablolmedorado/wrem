@@ -1,0 +1,15 @@
+<div *ngIf="matriz && objetos_filas?.length && objetos_columnas?.length">
+  <table class="text-center" border="1" width="100%">
+    <tr>
+      <th class="text-center" valign="top" bgcolor="#c8e0e0">{{ matriz.codigo }}</th>
+      <th *ngFor="let columna of objetos_columnas" class="text-center" valign="top" bgcolor="#c8e0e0">{{ columna.codigo }}</th>
+    </tr>
+    <tr *ngFor="let fila of objetos_filas">
+      <th class="text-center" valign="top" bgcolor="#c8e0e0">{{ fila.codigo }}</th>
+      <td *ngFor="let columna of objetos_columnas" class="text-center" valign="top">
+        <ng-container *ngIf="!fila.trazabilidad_desde.includes(columna.id); else blockIconoTraza">-</ng-container>
+      </td>
+    </tr>
+  </table>
+</div>
+<ng-template #blockIconoTraza><i class="fa fa-long-arrow-up" aria-hidden="true"></i></ng-template>

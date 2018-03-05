@@ -1,0 +1,17 @@
+<ng-container *ngIf="nodes?.length">
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-xs-12">
+      <p-tree
+        [value]="nodes"
+        selectionMode="single"
+        [(selection)]="selectedNode"
+        (onNodeSelect)="nodeSelect($event)"
+        (onNodeExpand)="nodeExpand($event)"
+        (onNodeCollapse)="nodeCollapse($event)"
+        (onNodeContextMenuSelect)="nodeContextMenuSelect($event)"
+        [contextMenu]="cm">
+      </p-tree>
+      <p-contextMenu #cm [model]="contextMenu" appendTo="body"></p-contextMenu>
+    </div>
+  </div>  
+</ng-container>

@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+body { padding-top: 70px; }
+
+textarea {
+  resize: none;
+}
+
+.vertical-align {
+    display: flex;
+    align-items: center;
+}
+
+/* Growl */
+.ui-growl {
+    top: 100px !important;
+    z-index: 16777271 !important;
+}
+
+/* Multiselect */
+li .dropdown-item .search {
+    padding: 0px 9px !important;
+}
+
+/* required */
+.requerido:after {
+  content: " *";
+}

@@ -1,0 +1,171 @@
+<ng-container *ngIf="asociacion">
+  <table border="1" width="100%">
+    <tr bgcolor="#c8e0e0">
+      <th align="left" valign="top">{{ asociacion.codigo }}</th>
+      <th align="left" valign="top" width="100%" colspan="1">
+        {{ asociacion.nombre }}(
+          <ng-container *ngFor="let rol_aux of asociacion.roles; let last=last">
+            {{ objetos.get(rol_aux.tipo_base).nombre }}<ng-container *ngIf="!last">,</ng-container>
+          </ng-container>
+        )
+      </th>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Versión</th>
+      <td align="left" valign="top" colspan="1">{{ asociacion.version }} ({{ asociacion.fecha_version | date: 'dd/MM/yyyy' }})</td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Autores</th>
+      <td align="left" valign="top" colspan="1">
+        <ul *ngIf="asociacion.autores?.length; else blockInterrogacion">
+          <li *ngFor="let autor of asociacion.autores">{{ objetos.get(autor).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Dependencias</th>
+      <td align="left" valign="top" colspan="1">
+        <ul *ngIf="asociacion.trazabilidad_desde?.length; else blockNinguno">
+          <li *ngFor="let dependencia of asociacion.trazabilidad_desde">[{{objetos.get(dependencia).codigo}}] {{ objetos.get(dependencia).nombre }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Descripción</th>
+      <td colspan="1" align="left" valign="top">
+          Este tipo de asociación representa el hecho de que 
+          <em *ngIf="asociacion.descripcion; else blockPD">{{ asociacion.descripcion }}</em> 
+      </td>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Comentarios</th>
+      <td align="left" valign="top" colspan="1">{{ asociacion.comentarios || 'Ninguno' }}</td>
+    </tr>
+  </table>
+  <ng-container *ngFor="let rol of asociacion.roles">
+    <br>
+    <table border="1" width="100%">
+      <tr bgcolor="#c8e0e0">
+        <th align="left" valign="top" nowrap="1">
+          Rol {{ tipos_propiedad[rol.tipo_propiedad] }}
+        </th>
+        <th align="left" valign="top" width="100%">
+          {{ asociacion.nombre }}(
+            <ng-container *ngFor="let rol_aux of asociacion.roles; let last=last">
+              {{ objetos.get(rol_aux.tipo_base).nombre }}<ng-container *ngIf="!last">,</ng-container>
+            </ng-container>
+          ):: {{ rol.nombre}}
+        </th>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Descripción</th>
+        <td align="left" valign="top">
+            Este rol representa <em *ngIf="rol.descripcion; else blockPD">{{ rol.descripcion }}</em>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Tipo</th>
+        <td align="left" valign="top">
+          <code ngSwitch="{{ rol.tipo }}">
+            <ng-container *ngSwitchCase="'S'">{{ objetos.get(rol.tipo_base).nombre }}</ng-container>
+            <ng-container *ngSwitchCase="'C'">Set ({{ objetos.get(rol.tipo_base).nombre })}</ng-container>
+            <ng-container *ngSwitchCase="'SE'">Sequence ({{ objetos.get(rol.tipo_base).nombre }})</ng-container>
+            <ng-container *ngSwitchCase="'B'">Bag ({{ objetos.get(rol.tipo_base).nombre }})</ng-container>
+          </code>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Multiplicidad</th>
+        <td align="left" valign="top" ngSwitch="{{ rol.tipo }}">
+          <ng-container *ngSwitchCase="'S'">1</ng-container>
+          <ng-container *ngSwitchDefault>
+            <ng-container *ngIf="rol.multiplicidad_inferior; else blockPD">{{ rol.multiplicidad_inferior }}</ng-container>..
+            <ng-container *ngIf="rol.multiplicidad_superior; else blockPD">{{ rol.multiplicidad_superior }}</ng-container>
+          </ng-container>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Comentarios</th>
+        <td align="left" valign="top" colspan="1">{{ rol.comentarios || 'Ninguno'}}</td>
+      </tr>
+    </table>
+  </ng-container>
+  <ng-container *ngFor="let atributo of asociacion.atributos">
+    <br>
+    <table border="1" width="100%">
+      <tr bgcolor="#c8e0e0">
+        <th align="left" valign="top" nowrap="1">
+          Atributo {{ tipos_propiedad[atributo.tipo_propiedad] }}
+        </th>
+        <th align="left" valign="top" width="100%">
+          {{ asociacion.nombre }}:: {{ atributo.nombre }}
+        </th>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Descripción</th>
+        <td align="left" valign="top">
+          Este atributo representa <em *ngIf="atributo.descripcion; else blockPD">{{ atributo.descripcion }}</em>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Tipo</th>
+        <td align="left" valign="top">
+          <code ngSwitch="{{ atributo.tipo }}">
+            <ng-container *ngSwitchCase="'S'">
+              <ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'C'">
+              Set (<ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>)
+            </ng-container>
+            <ng-container *ngSwitchCase="'SE'">
+              Sequence (<ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>)
+            </ng-container>
+            <ng-container *ngSwitchCase="'B'">
+              Bag (<ng-container *ngIf="atributo.tipo_base_default">{{ tipos_base[atributo.tipo_base_default].nombre }}</ng-container>
+              <ng-container *ngIf="atributo.tipo_base">{{ objetos.get(atributo.tipo_base).nombre }}</ng-container>)
+            </ng-container>
+          </code>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Comentarios</th>
+        <td align="left" valign="top" colspan="1">
+          <ng-container *ngIf="atributo.comentarios; else blockNinguno">{{ atributo.comentarios }}</ng-container>
+        </td>
+      </tr>
+    </table>
+  </ng-container>
+  <ng-container *ngFor="let expresion of asociacion.expresiones">
+    <br>
+    <table border="1" width="100%">
+      <tr bgcolor="#c8e0e0">
+        <th align="left" valign="top" nowrap="1">Expresión de invariante</th>
+        <th align="left" valign="top" width="100%">{{ asociacion.nombre }}:: {{ expresion.nombre }}</th>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Descripción</th>
+        <td align="left" valign="top" colspan="1">
+          <ng-container *ngIf="expresion.expresion_lenguaje_natural; else blockPD">{{ expresion.expresion_lenguaje_natural }}</ng-container>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Expresión OCL</th>
+        <td align="left" valign="top">
+          <code *ngIf="expresion.expresion_ocl">{{ expresion.expresion_ocl }}</code>
+        </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top">Comentarios</th>
+        <td align="left" valign="top" colspan="1">
+          <ng-container *ngIf="expresion.comentarios; else blockNinguno">{{ expresion.comentarios }}</ng-container>
+        </td>
+      </tr>
+    </table>
+  </ng-container>
+</ng-container>
+<ng-template #blockPD><span style="color:red;"><b>PD</b></span></ng-template>
+<ng-template #blockInterrogacion><span style="color:red;"><b>?</b></span></ng-template>
+<ng-template #blockNinguno>Ninguno</ng-template>

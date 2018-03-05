@@ -1,0 +1,8 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}IP bloqueada{% endblock %}
+{% block content_title %}<h1>IP bloqueada</h1>{% endblock %}
+{% block content %}
+<p>Su IP ha sido baneada durante 15 minutos tras {{ failure_limit }} intentos de login incorrectos.</p>
+{% endblock %}

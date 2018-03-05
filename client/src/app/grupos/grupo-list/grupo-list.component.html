@@ -1,0 +1,109 @@
+<div class="container">
+  <div class="row vertical-align">
+    <div class="col-xs-5">
+      <div class="pull-left">
+        Total:&nbsp;<span class="badge">{{item_count || 0}}</span>
+        <span *ngIf="search" style="margin-left:15px;">Filtro:&nbsp;<span class="label label-primary">%{{search | truncate : 30}}%</span></span>
+      </div>      
+    </div>
+    <div class="col-xs-4">
+      <div class="input-group">
+        <input type="text" class="form-control" aria-label="..." placeholder="Filtrar..." [(ngModel)]="search_query" (keydown.enter)="filter()">
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="button" tooltip="Limpiar (mostrar todos)" (click)="clearFilter()"><i class="fa fa-eraser" aria-hidden="true"></i></button>
+          <button class="btn btn-default" type="button" tooltip="Filtrar" (click)="filter()"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-3">
+      <button type="button" (click)="newGrupo()" class="btn btn-primary pull-right" aria-label="Nuevo grupo">
+        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;<i class="fa fa-users" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <br>
+  <div *ngIf="grupos?.length">
+    <div class="row">
+      <div class="col-xs-12">
+        <table class="table text-center">
+          <thead>
+            <tr>
+              <th class="text-center" (click)="order('id')"><i class="fa" [class.fa-sort-numeric-desc]="ordering==='-id'" [class.fa-sort-numeric-asc]="ordering==='id'" aria-hidden="true"></i>&nbsp;&nbsp;Id</th>
+              <th class="text-center" (click)="order('nombre')"><i class="fa" [class.fa-sort-alpha-desc]="ordering==='-nombre'" [class.fa-sort-alpha-asc]="ordering==='nombre'" aria-hidden="true"></i>&nbsp;&nbsp;Nombre</th>
+              <th class="text-center">Administrador</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let grupo of grupos">
+              <td>{{grupo.id}}</td>
+              <td (dblclick)="grupoDetail(grupo)">{{grupo.nombre | truncate : 70 }}</td>
+              <td><i class="fa" [class.fa-check]="grupo.administrador === auth.usuario.id" [class.fa-times]="grupo.administrador !== auth?.usuario.id"></i></td>
+              <td>
+                <button type="button" (click)="editGrupo(grupo)" class="btn btn-sm btn-info" aria-label="Editar datos del grupo">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                </button>
+                <button type="button" (click)="deleteGrupo(grupo)" class="btn btn-sm btn-danger" aria-label="Eliminar grupo" [disabled]="grupo.administrador !== auth?.usuario.id">
+                  <i class="fa fa-trash-o" aria-hidden="true"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>    
+        </table>
+      </div>
+    </div>
+    <div class="row vertical-align">
+      <div class="col-xs-6" style="padding-bottom: 8px;">
+        <div class="pull-left">
+          <span>Tamaño de página</span>
+          <select style="width:65px;display:inline;" class="form-control input-sm" id="page_size" [(ngModel)]="page_size" (ngModelChange)="setPageSize($event)" name="page_size">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="pull-right">
+          <pagination [totalItems]="item_count" [(ngModel)]="current_page" [maxSize]="max_pager_size" class="pagination-sm"
+                    [boundaryLinks]="true" [rotate]="true" [itemsPerPage]="page_size" (pageChanged)="pageChanged($event)"
+                    (numPages)="number_of_pages = $event" previousText="Anterior" nextText="Siguiente" firstText="Primera"
+                    lastText="Última"></pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!grupos?.length">
+    <div class="row">
+      <div class="col-xs-12">
+        <alert type="warning" dismissible="true">Sin resultados.</alert>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #grupoModal="bs-modal" [config]="{backdrop: 'static'}" (onHidden)="clearSelectedGrupo()" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">{{ selectedGrupo?.id ? 'Editar grupo' : 'Nuevo grupo' }}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="grupoModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-container *ngIf="selectedGrupo">
+          <app-grupo-form #GrupoForm='GrupoForm'
+            [grupo]="selectedGrupo"
+            (init)="formInit($event, GrupoForm)"
+            (onSuccess)="onGruposUpdate($event)">
+          </app-grupo-form>
+        </ng-container>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="grupoModal.hide()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="grupoForm?.form.ngSubmit.emit()" [disabled]="selectedGrupo?.administrador && selectedGrupo?.administrador !== auth?.usuario.id">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

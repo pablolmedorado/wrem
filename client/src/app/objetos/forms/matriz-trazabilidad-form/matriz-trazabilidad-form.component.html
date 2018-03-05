@@ -1,0 +1,52 @@
+<ng-container *ngIf="objeto; else blockProgress">
+  <form (ngSubmit)="onSubmit(formGroup)" #MatrizTrazabilidadForm="ngForm" [formGroup]="formGroup" novalidate>
+    <tabset>
+      <tab heading="General">
+        <br>
+        <app-general-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-general-tab>
+      </tab>
+      <tab heading="Detalle">
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['tipo_filas'].invalid && submitted">
+              <label class="control-label" for="objeto-tipo_filas">Tipo de objeto en las filas</label>
+              <select id="objeto-tipo_filas" class="form-control" [(ngModel)]="tipoFilaSeleccionado" [ngModelOptions]="{standalone: true}" (change)="onChangeFilas($event)">
+                <option [ngValue]="null">Seleccionar...</option>
+                <option *ngFor="let tipo of tiposOptions" [ngValue]="tipo">{{ tipo.label }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xs-12">
+            <div class="form-group" [class.has-error]="formGroup.controls['tipo_columnas'].invalid && submitted">
+              <label class="control-label" for="objeto-tipo_columnas">Tipo de objeto en las columnas</label>
+              <select id="objeto-tipo_columnas" class="form-control" [(ngModel)]="tipoColumnaSeleccionado" [ngModelOptions]="{standalone: true}" (change)="onChangeColumnas($event)">
+                <option [ngValue]="null">Seleccionar...</option>
+                <option *ngFor="let tipo of tiposOptions" [ngValue]="tipo">{{ tipo.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Comentarios">
+        <br>
+        <app-comment-tab [objeto]="objeto" [formGroup]="formGroup" [submitted]="submitted"></app-comment-tab>
+      </tab>
+      <tab heading="Sección">
+        <br>
+        <app-organization-tab [objeto]="objeto" [documentoId]="documentoId" [formGroup]="formGroup"></app-organization-tab>
+      </tab>
+      <tab heading="Historia" *ngIf="objeto?.id">
+        <br>
+        <app-log-tab [objeto]="objeto"></app-log-tab>
+      </tab>
+    </tabset>
+  </form>
+</ng-container>
+<ng-template #blockProgress>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+      <span class="sr-only">Cargando</span>
+    </div>
+  </div>
+</ng-template>
